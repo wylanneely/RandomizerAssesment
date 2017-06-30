@@ -15,6 +15,8 @@ class PairsTableViewController: UITableViewController {
     }
     
     @IBAction func randomizeButtonTapped(_ sender: Any) {
+        PersonController.shared.randomizePeople()
+        self.tableView.reloadData()
     }
     
     @IBAction func addButtonTapped(_ sender: Any) {
@@ -70,7 +72,7 @@ class PairsTableViewController: UITableViewController {
         if editingStyle == .delete {
             let person = PersonController.shared.people[indexPath.row]
             PersonController.shared.deletePerson(person: person)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
     }
 }
 
