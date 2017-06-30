@@ -9,15 +9,13 @@
 import Foundation
 import CoreData
 
-class PersonController {
+struct PersonController {
     
-    static var shared = PersonController()
     
     var people: [Person] {
         get{
         return fetchPeople()
         } set {
-            
         }
     }
     
@@ -36,11 +34,6 @@ class PersonController {
         saveToCoreData()
     }
     
-    //    func updateIndexOfPerson(person: Person , index: Int){
-    //        person.savedIndex = Int16(index)
-    //        saveToCoreData()
-    //    }
-    
     func deletePerson(person: Person){
         CoreDataStack.context.delete(person)
         saveToCoreData()
@@ -53,21 +46,28 @@ class PersonController {
             
         }
     }
+ 
     
-    func getRandomIndex(numberThreathold: Int) -> Int {
-        return Int(arc4random_uniform(UInt32(numberThreathold - 1)))
-    }
-    
-    func randomizePeople(){
+    mutating func randomizePeople(){
         
-       self.people = people.shuffled()
+      let shuffledPeople = self.people.shuffled()
+        
+        let oldPeople = self.people
+        
+        for peep in shuffledPeople {
+            guard let name = peep.name else {print("error saving shuffled people"); return}
+            createPerson(name: name)
+        }
+        for person in oldPeople {
+            CoreDataStack.context.delete(person)
+        }
+        
         
     }
     
 }
 
 extension MutableCollection where Indices.Iterator.Element == Index {
-    /// Shuffles the contents of this collection.
     mutating func shuffle() {
         let c = count
         guard c > 1 else { return }
@@ -82,7 +82,6 @@ extension MutableCollection where Indices.Iterator.Element == Index {
 }
 
 extension Sequence {
-    /// Returns an array with the contents of this sequence, shuffled.
     func shuffled() -> [Iterator.Element] {
         var result = Array(self)
         result.shuffle()
