@@ -41,7 +41,7 @@ class PairsTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return (PersonController.shared.people.count / 2)
+        return PersonController.shared.people.count - 1
     }
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Group \(section + 1)"
@@ -55,7 +55,10 @@ class PairsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "personCell", for: indexPath)
         
-        let person = PersonController.shared.people[indexPath.row]
+        let section = indexPath.section
+        let indexpath = indexPath.row
+        
+        let person = PersonController.shared.people[indexpath + section]
         
         cell.textLabel?.text = person.name
         
@@ -65,12 +68,13 @@ class PairsTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
+            let person = PersonController.shared.people[indexPath.row]
+            PersonController.shared.deletePerson(person: person)
             tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }
     }
+}
+
+    
     
     
 }
