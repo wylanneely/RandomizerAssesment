@@ -18,6 +18,7 @@ class PairsTableViewController: UITableViewController {
     
     @IBAction func randomizeButtonTapped(_ sender: Any) {
         personController.randomizePeople()
+
         self.tableView.reloadData()
     }
     
@@ -45,7 +46,7 @@ class PairsTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return personController.people.count - 1
+        return personController.people.count / 2
     }
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Group \(section + 1)"
@@ -60,9 +61,11 @@ class PairsTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "personCell", for: indexPath)
         
         let section = indexPath.section
-        let indexpath = indexPath.row
+        let row = indexPath.row
         
-        let person = personController.people[indexpath + section]
+        let newIndex = sectionAndRowtoInt(section: section, row: row )
+        
+        let person = personController.people[newIndex]
         
         cell.textLabel?.text = person.name
         
@@ -77,8 +80,11 @@ class PairsTableViewController: UITableViewController {
             tableView.reloadData()
     }
 }
-
+    //Help Display People in proper sections and rows
     
+    func sectionAndRowtoInt(section: Int, row: Int) -> Int {
+        return (section * 2) + row
+    }
     
     
 }
