@@ -12,7 +12,7 @@ import CoreData
 struct PersonController {
     
     
-    var people: [Person] {
+    var people: [Person?] {
         get{
         return fetchPeople()
         } set {
@@ -55,10 +55,11 @@ struct PersonController {
         let oldPeople = self.people
         
         for peep in shuffledPeople {
-            guard let name = peep.name else {print("error saving shuffled people"); return}
+            guard let name = peep?.name else {print("error saving shuffled people"); return}
             createPerson(name: name)
         }
         for person in oldPeople {
+            guard let person = person else {return }
             CoreDataStack.context.delete(person)
         }
         
